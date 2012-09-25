@@ -1,4 +1,0 @@
-userscripts
-===========
-
-My UserScripts
