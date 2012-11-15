@@ -2,38 +2,56 @@
 // ==UserScript==
 // @name        bitbucket UserScript
 // @namespace   http://www.psyrendust.com/userscripts/bitbucket
-// @description Makes the respository list more readable
+// @description Makes the respository list more readable and fixes the display of tables in markdown files.
 // @grant       none
 // @license     bitbucket UserScript is released under the MIT License. Included third-party software are limited to their respective licenses.
-// @version     1.0
+// @version     2.1
 //
-// @include     http://bitbucket.org/*
-// @include     http://www.bitbucket.org/*
+// @include     https://bitbucket.org
 // @include     https://bitbucket.org/*
-// @include     https://www.bitbucket.org/*
 //
 // ==/UserScript==
 
+var app = function(){
+	var addStyletoDom = function(src) {
+		console.log('addStyletoDom');
+		$('head').append('<link rel="stylesheet" type="text/css" href="'+src+'" />');
+	};
 
-function addJQuery(callback) {
-	var script = document.createElement("script");
-	script.setAttribute("src", "https://dwz7u9t8u8usb.cloudfront.net/m/4b4af5728843/compressed/js/0cd046e494e4.js");
-	script.addEventListener('load', function() {
-		var script = document.createElement("script");
-		script.textContent = "(" + callback.toString() + ")();";
-		document.body.appendChild(script);
-	}, false);
-	document.body.appendChild(script);
+	var resizeRepoList = function() {
+		var $filterList = $('ol.filter-list');
+		var $spans = $filterList.find("span.owner:contains('johnmcneilstudio')");
+		$filterList.css('font-size', '80%');
+		$spans.html('JMS');
+	};
+
+	$(document).ready(function(){
+		console.log('document ready');
+		resizeRepoList();
+		addStyletoDom('https://raw.github.com/psyrendust/userscripts/master/bitbucket/fixMarkdownTable.css');
+	});
+};
+
+function addFiletoDom(tag, type, src, callback) {
+	var el = document.createElement(tag);
+	el.setAttribute("src", src);
+	el.setAttribute("type", type);
+	if(callback){
+		el.addEventListener('load', function() {
+			var script = document.createElement("script");
+			script.textContent = "jQuery.noConflict();(" + callback.toString() + ")();";
+			document.body.appendChild(script);
+		}, false);
+	}
+	document.body.appendChild(el);
 }
 
-function userScriptInit() {
-	var $filterList = $('ol.filter-list');
-	var $spans = $filterList.find("span.owner:contains('johnmcneilstudio')");
-	$filterList.css('font-size', '80%');
-	$spans.html('JMS');
-}
+// 	// load css file to fix markdown tables
+// 	addFiletoDom('style', 'text/css', 'https://raw.github.com/psyrendust/userscripts/master/bitbucket/fixMarkdownTable.css');
+// }
 
 // load jQuery and execute the main function
-addJQuery(userScriptInit);
+addFiletoDom('script', 'text/javascript', 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js', app);
+
 
 })();
