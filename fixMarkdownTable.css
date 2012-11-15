@@ -1,0 +1,15 @@
+.readme table {
+	border-collapse: collapse;
+}
+.readme table, .readme th, .readme td {
+	border: 1px solid #ddd;
+}
+.readme th {
+	background-color: #efefef; text-align: left;
+}
+.readme th, .readme td {
+	padding: 4px 6px;
+}
+.readme tr:nth-child(even) {
+	background-color: whiteSmoke;
+}
